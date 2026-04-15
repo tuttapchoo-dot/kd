@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kingdom</title>
+
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Kingdom">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<style>
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background: radial-gradient(circle, #000, #111);
+    color: gold;
+}
+
+/* loading */
+#loading {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 35px;
+    animation: fade 1.5s;
+    z-index: 999;
+}
+
+/* panel */
+.panel {
+    display: none;
+    padding: 20px;
+    text-align: center;
+}
+
+/* input */
+input {
+    width: 90%;
+    padding: 12px;
+    margin: 8px;
+    border-radius: 12px;
+    border: none;
+}
+
+/* button */
+button {
+    width: 95%;
+    padding: 12px;
+    border-radius: 12px;
+    background: gold;
+    border: none;
+    font-weight: bold;
+}
+
+/* toggle */
+.toggle {
+    display: flex;
+    justify-content: space-between;
+    background: #111;
+    padding: 14px;
+    margin: 12px 0;
+    border-radius: 12px;
+    transition: 0.3s;
+}
+
+.toggle.active {
+    box-shadow: 0 0 15px gold;
+}
+
+/* animation */
+@keyframes fade {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+</style>
+
+</head>
+
+<body>
+
+<div id="loading">👑 Kingdom</div>
+
+<div class="panel" id="app">
+
+    <h2>Kingdom Panel</h2>
+
+    <div id="login">
+        <input type="text" id="user" placeholder="Username">
+        <input type="password" id="pass" placeholder="Password">
+        <button onclick="login()">เข้าสู่ระบบ</button>
+    </div>
+
+    <div id="menu" style="display:none;">
+        <h3>เมนู</h3>
+
+        <div class="toggle">
+            ดูดหัว 100%
+            <input type="checkbox" onchange="toggle(this)">
+        </div>
+
+        <div class="toggle">
+            ดูดหัว 85%
+            <input type="checkbox" onchange="toggle(this)">
+        </div>
+
+        <div class="toggle">
+            กันแบน 100%
+            <input type="checkbox" onchange="toggle(this)">
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+// loading
+setTimeout(() => {
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("app").style.display = "block";
+}, 1800);
+
+// login
+function login() {
+    let u = document.getElementById("user").value;
+    let p = document.getElementById("pass").value;
+
+    if (u === "Kingdom" && p === "2001") {
+        document.getElementById("login").style.display = "none";
+        document.getElementById("menu").style.display = "block";
+        vibrate();
+    } else {
+        alert("รหัสผิด!");
+    }
+}
+
+// toggle effect
+function toggle(el) {
+    let parent = el.parentElement;
+
+    if (el.checked) {
+        parent.classList.add("active");
+        save();
+        vibrate();
+    } else {
+        parent.classList.remove("active");
+        save();
+    }
+}
+
+// vibration
+function vibrate() {
+    if (navigator.vibrate) {
+        navigator.vibrate(100);
+    }
+}
+
+// save state
+function save() {
+    let checks = document.querySelectorAll("input[type=checkbox]");
+    let data = [];
+    checks.forEach(c => data.push(c.checked));
+    localStorage.setItem("state", JSON.stringify(data));
+}
+
+// load state
+window.onload = function() {
+    let data = JSON.parse(localStorage.getItem("state"));
+    if (data) {
+        let checks = document.querySelectorAll("input[type=checkbox]");
+        checks.forEach((c,i) => {
+            c.checked = data[i];
+            if(c.checked) c.parentElement.classList.add("active");
+        });
+    }
+}
+
+</script>
+
+</body>
+</html>
